@@ -1,0 +1,8 @@
+platform :ios, '8.0'
+
+pod 'WTAData', '~>1.2.2'
+pod 'AFNetworking', '~>2.5'
+pod 'JInjector', '~>1.0.0'
+pod 'WTAHelpers', :git => 'git@github.com:willowtreeapps/WTAHelpers.git', :tag => '0.1.1'
+
+pod 'JSONModel'

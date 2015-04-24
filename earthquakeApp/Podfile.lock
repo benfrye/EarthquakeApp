@@ -1,0 +1,66 @@
+PODS:
+  - AFNetworking (2.5.3):
+    - AFNetworking/NSURLConnection (= 2.5.3)
+    - AFNetworking/NSURLSession (= 2.5.3)
+    - AFNetworking/Reachability (= 2.5.3)
+    - AFNetworking/Security (= 2.5.3)
+    - AFNetworking/Serialization (= 2.5.3)
+    - AFNetworking/UIKit (= 2.5.3)
+  - AFNetworking/NSURLConnection (2.5.3):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/NSURLSession (2.5.3):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/Reachability (2.5.3)
+  - AFNetworking/Security (2.5.3)
+  - AFNetworking/Serialization (2.5.3)
+  - AFNetworking/UIKit (2.5.3):
+    - AFNetworking/NSURLConnection
+    - AFNetworking/NSURLSession
+  - JInjector (1.0.0)
+  - JSONModel (1.0.2)
+  - WTAData (1.2.2)
+  - WTAHelpers (0.1.1):
+    - WTAHelpers/WTAAutoLayoutHelpers (= 0.1.1)
+    - WTAHelpers/WTAColorHelpers (= 0.1.1)
+    - WTAHelpers/WTAColorImage (= 0.1.1)
+    - WTAHelpers/WTADeviceHelpers (= 0.1.1)
+    - WTAHelpers/WTAFrameHelpers (= 0.1.1)
+    - WTAHelpers/WTANibLoading (= 0.1.1)
+    - WTAHelpers/WTAReusableIdentifier (= 0.1.1)
+  - WTAHelpers/WTAAutoLayoutHelpers (0.1.1)
+  - WTAHelpers/WTAColorHelpers (0.1.1)
+  - WTAHelpers/WTAColorImage (0.1.1)
+  - WTAHelpers/WTADeviceHelpers (0.1.1)
+  - WTAHelpers/WTAFrameHelpers (0.1.1)
+  - WTAHelpers/WTANibLoading (0.1.1)
+  - WTAHelpers/WTAReusableIdentifier (0.1.1)
+
+DEPENDENCIES:
+  - AFNetworking (~> 2.5)
+  - JInjector (~> 1.0.0)
+  - JSONModel
+  - WTAData (~> 1.2.2)
+  - WTAHelpers (from `git@github.com:willowtreeapps/WTAHelpers.git`, tag `0.1.1`)
+
+EXTERNAL SOURCES:
+  WTAHelpers:
+    :git: git@github.com:willowtreeapps/WTAHelpers.git
+    :tag: 0.1.1
+
+CHECKOUT OPTIONS:
+  WTAHelpers:
+    :git: git@github.com:willowtreeapps/WTAHelpers.git
+    :tag: 0.1.1
+
+SPEC CHECKSUMS:
+  AFNetworking: e1d86c2a96bb5d2e7408da36149806706ee122fe
+  JInjector: 34559db4ee3549efb6771f59056a064ccf4b25b3
+  JSONModel: 6ffcb4ffa3659c9e9a2e5d45d6c7705bab187c03
+  WTAData: fbcc1ade4fc997e2dbc2bc8d126a24ed5e783f46
+  WTAHelpers: 293d44201fe3fac419d3f096e927faed3f74f432
+
+COCOAPODS: 0.36.4
