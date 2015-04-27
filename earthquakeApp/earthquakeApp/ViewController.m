@@ -33,12 +33,6 @@
     UITapGestureRecognizer *_timeTap;
 }
 
-
--(void)viewWillAppear:(BOOL)animated
-{
-    _earthquakeResultsController = [self fetchedResultsController];
-}
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -61,6 +55,22 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+#pragma mark - Table view data source
+
+-(NSFetchedResultsController *)fetchedResultsController
+{
+    if (!_earthquakeResultsController) {
+        NSFetchRequest *fetchRequest = [Epicenter fetchRequest];
+        fetchRequest.sortDescriptors = @[];
+        _earthquakeResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest
+                                                                           managedObjectContext:[[WTAData injected] mainContext]
+                                                                             sectionNameKeyPath:nil
+                                                                                      cacheName:nil];
+        [_earthquakeResultsController performFetch:nil];
+    }
+    return _earthquakeResultsController;
 }
 
 -(void)getEarthquakes
@@ -102,22 +112,6 @@
     }];
 }
 
--(NSFetchedResultsController *)fetchedResultsController
-{
-    if (!_earthquakeResultsController) {
-        NSFetchRequest *fetchRequest = [Epicenter fetchRequest];
-        fetchRequest.sortDescriptors = @[];
-        _earthquakeResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest
-                                                                           managedObjectContext:[[WTAData injected] mainContext]
-                                                                             sectionNameKeyPath:nil
-                                                                                      cacheName:nil];
-        [_earthquakeResultsController performFetch:nil];
-    }
-    return _earthquakeResultsController;
-}
-
-#pragma mark - Table view data source
-
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     // Return the number of sections.
@@ -127,7 +121,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-    return [[[_earthquakeResultsController sections] objectAtIndex:section] numberOfObjects];
+    return [[[[self fetchedResultsController] sections] objectAtIndex:section] numberOfObjects];
 }
 
 -(void)headerTap:(id)sender
@@ -135,14 +129,14 @@
     //Magnitude label clicked
     if ([(UIGestureRecognizer*)sender isEqual:_magnitudeTap])
     {
-        [_earthquakeResultsController.fetchRequest setSortDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"magnitude" ascending:YES]]];
+        [[[self fetchedResultsController] fetchRequest] setSortDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"magnitude" ascending:YES]]];
     }
     //Time label clicked
     else if ([(UIGestureRecognizer*)sender isEqual:_timeTap])
     {
-        [_earthquakeResultsController.fetchRequest setSortDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"time" ascending:YES]]];
+        [[[self fetchedResultsController] fetchRequest] setSortDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"time" ascending:YES]]];
     }
-    [_earthquakeResultsController performFetch:nil];
+    [[self fetchedResultsController] performFetch:nil];
     [self.tableView reloadData];
 }
 
@@ -156,7 +150,7 @@
     NSString* cellIdentifier = [EpicenterCell wta_reuseableIdentifier];
     EpicenterCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier forIndexPath:indexPath];
 
-    Epicenter *toAdd = [_earthquakeResultsController objectAtIndexPath:indexPath];
+    Epicenter *toAdd = [[self fetchedResultsController] objectAtIndexPath:indexPath];
     cell.magnitudeLabel.text = [NSString stringWithFormat:@"%d", [toAdd.magnitude intValue]];
     cell.latitudeLongitudeLabel.text = [NSString stringWithFormat:@"%.2f/%.2f", [toAdd.latitude floatValue], [toAdd.longitude floatValue]];
     
@@ -219,8 +213,8 @@
     NSError *error;
     NSPredicate *magnitudePredicate = [NSPredicate predicateWithFormat:@"magnitude >= %d", minimumMagnitude];
     
-    [_earthquakeResultsController.fetchRequest setPredicate:magnitudePredicate];
-    [_earthquakeResultsController performFetch:&error];
+    [[[self fetchedResultsController] fetchRequest] setPredicate:magnitudePredicate];
+    [[self fetchedResultsController] performFetch:&error];
     if (error)
     {
         NSLog(@"Error fetching cached Earthquakes. %@", error);
@@ -234,11 +228,11 @@
     NSArray *allEpicenters;
     if ([[segue identifier] isEqualToString:@"showSingle"])
     {
-        allEpicenters = [[NSArray alloc] initWithObjects:[[_earthquakeResultsController fetchedObjects] objectAtIndex:[[self.tableView indexPathForSelectedRow] row]], nil];
+        allEpicenters = [[NSArray alloc] initWithObjects:[[[self fetchedResultsController] fetchedObjects] objectAtIndex:[[self.tableView indexPathForSelectedRow] row]], nil];
     }
     else if ([[segue identifier] isEqualToString:@"showAll"])
     {
-        allEpicenters = [_earthquakeResultsController fetchedObjects];
+        allEpicenters = [[self fetchedResultsController] fetchedObjects];
     }
     
     controller.allEpicenters = allEpicenters;
