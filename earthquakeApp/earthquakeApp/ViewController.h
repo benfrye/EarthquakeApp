@@ -10,11 +10,13 @@
 #import <WTAData/WTAData.h>
 
 #import "FilterModalView.h"
+#import "TableHeaderView.h"
 
 @interface ViewController : UITableViewController  <FilterModalViewDelegate>
 
 @property (weak, nonatomic) IBOutlet UIButton *filterButton;
-@property (nonatomic, retain) IBOutlet FilterModalView *filterView;
+@property (strong, nonatomic) FilterModalView *filterView;
+@property (strong, nonatomic) TableHeaderView *tableHeaderView;
 
 @end
 

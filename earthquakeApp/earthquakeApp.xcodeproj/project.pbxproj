@@ -14,6 +14,8 @@
 		17526A571AE99DDB0037A4D2 /* FilterModalView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 17526A561AE99DDB0037A4D2 /* FilterModalView.xib */; };
 		17526A601AE9C3850037A4D2 /* FilterModalView.m in Sources */ = {isa = PBXBuildFile; fileRef = 17526A5F1AE9C3850037A4D2 /* FilterModalView.m */; };
 		17526A661AEA79E30037A4D2 /* MKCircle+Magnitude.m in Sources */ = {isa = PBXBuildFile; fileRef = 17526A651AEA79E30037A4D2 /* MKCircle+Magnitude.m */; };
+		17526A6F1AEE83DC0037A4D2 /* TableHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 17526A6E1AEE83DC0037A4D2 /* TableHeaderView.xib */; };
+		17526A721AEE84040037A4D2 /* TableHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 17526A711AEE84040037A4D2 /* TableHeaderView.m */; };
 		177A746F1AE557640094E250 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 177A746E1AE557640094E250 /* main.m */; };
 		177A74721AE557640094E250 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 177A74711AE557640094E250 /* AppDelegate.m */; };
 		177A74751AE557640094E250 /* earthquakeApp.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 177A74731AE557640094E250 /* earthquakeApp.xcdatamodeld */; };
@@ -54,6 +56,9 @@
 		17526A5F1AE9C3850037A4D2 /* FilterModalView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FilterModalView.m; sourceTree = "<group>"; };
 		17526A641AEA79E30037A4D2 /* MKCircle+Magnitude.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MKCircle+Magnitude.h"; sourceTree = "<group>"; };
 		17526A651AEA79E30037A4D2 /* MKCircle+Magnitude.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MKCircle+Magnitude.m"; sourceTree = "<group>"; };
+		17526A6E1AEE83DC0037A4D2 /* TableHeaderView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TableHeaderView.xib; sourceTree = "<group>"; };
+		17526A701AEE84040037A4D2 /* TableHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableHeaderView.h; sourceTree = "<group>"; };
+		17526A711AEE84040037A4D2 /* TableHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TableHeaderView.m; sourceTree = "<group>"; };
 		177A74691AE557640094E250 /* earthquakeApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = earthquakeApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		177A746D1AE557640094E250 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		177A746E1AE557640094E250 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -186,6 +191,9 @@
 				17526A561AE99DDB0037A4D2 /* FilterModalView.xib */,
 				17526A5E1AE9C3850037A4D2 /* FilterModalView.h */,
 				17526A5F1AE9C3850037A4D2 /* FilterModalView.m */,
+				17526A6E1AEE83DC0037A4D2 /* TableHeaderView.xib */,
+				17526A701AEE84040037A4D2 /* TableHeaderView.h */,
+				17526A711AEE84040037A4D2 /* TableHeaderView.m */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -354,6 +362,7 @@
 				177A747B1AE557640094E250 /* Main.storyboard in Resources */,
 				177A74801AE557640094E250 /* LaunchScreen.xib in Resources */,
 				177A747D1AE557640094E250 /* Images.xcassets in Resources */,
+				17526A6F1AEE83DC0037A4D2 /* TableHeaderView.xib in Resources */,
 				17526A571AE99DDB0037A4D2 /* FilterModalView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -410,6 +419,7 @@
 				17526A661AEA79E30037A4D2 /* MKCircle+Magnitude.m in Sources */,
 				177A74AA1AE579700094E250 /* SearchEarthquakeResults.m in Sources */,
 				170DB4E41AE6CBDF00D9E780 /* MapViewController.m in Sources */,
+				17526A721AEE84040037A4D2 /* TableHeaderView.m in Sources */,
 				177A74751AE557640094E250 /* earthquakeApp.xcdatamodeld in Sources */,
 				177A74AE1AE59CFB0094E250 /* NSObject+Injectable.m in Sources */,
 				177A74B11AE5A3B60094E250 /* APIService+Search.m in Sources */,

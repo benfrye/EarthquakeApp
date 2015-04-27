@@ -14,7 +14,7 @@
 
 @interface MapViewController : UIViewController <MKMapViewDelegate>
 
-@property NSMutableArray* allEpicenters;
+@property NSArray* allEpicenters;
 
 @property (weak, nonatomic) IBOutlet MKMapView *earthquakeMapView;
 
