@@ -12,7 +12,7 @@
 #import "FilterModalView.h"
 #import "TableHeaderView.h"
 
-@interface ViewController : UITableViewController  <FilterModalViewDelegate>
+@interface EarthquakeTableViewController: UITableViewController  <FilterModalViewDelegate>
 
 @property (weak, nonatomic) IBOutlet UIButton *filterButton;
 @property (strong, nonatomic) FilterModalView *filterView;

@@ -30,14 +30,21 @@ NSString* const APIServiceStatusChangeNotification = @"APIServiceStatusChangeNot
 -(void)setup
 {
     self.reachabilityManager = [AFNetworkReachabilityManager managerForDomain:@"usgs.gov"];
-    [self.reachabilityManager setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:APIServiceStatusChangeNotification object:nil];
+    [self.reachabilityManager setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status)
+    {
+        [[NSNotificationCenter defaultCenter]
+         postNotificationName:APIServiceStatusChangeNotification
+         object:nil];
     }];
     [self.reachabilityManager startMonitoring];
     
     AFJSONResponseSerializer* jsonSerializer = [AFJSONResponseSerializer serializer];
     AFHTTPResponseSerializer* httpSerializer = [AFHTTPResponseSerializer serializer];
-    self.responseSerializer = [AFCompoundResponseSerializer compoundSerializerWithResponseSerializers:@[jsonSerializer, httpSerializer]];
+    self.responseSerializer = [AFCompoundResponseSerializer
+                               compoundSerializerWithResponseSerializers:@[
+                                                                           jsonSerializer,
+                                                                           httpSerializer
+                                                                           ]];
     
     AFHTTPRequestSerializer* requestSerializer = [AFHTTPRequestSerializer serializer];
     
@@ -65,7 +72,9 @@ NSString* const APIServiceStatusChangeNotification = @"APIServiceStatusChangeNot
          NSLog(@"GET %@ took %0.2f seconds", urlString, -interval);
          completion(nil, responseObject);
      }
-                               failure:^(NSURLSessionDataTask *task, NSError *error, id responseObject)
+                               failure:^(NSURLSessionDataTask *task,
+                                         NSError *error,
+                                         id responseObject)
      {
          completion(error, responseObject);
      }];
@@ -82,7 +91,12 @@ NSString* const APIServiceStatusChangeNotification = @"APIServiceStatusChangeNot
                                                failure:(void (^)(NSURLSessionDataTask *, NSError *, id))failure
 {
     NSError *serializationError = nil;
-    NSMutableURLRequest *request = [self.requestSerializer requestWithMethod:method URLString:[[NSURL URLWithString:URLString relativeToURL:self.baseURL] absoluteString] parameters:parameters error:&serializationError];
+    NSMutableURLRequest *request = [self.requestSerializer
+                                    requestWithMethod:method
+                                    URLString:[[NSURL URLWithString:URLString
+                                                      relativeToURL:self.baseURL] absoluteString]
+                                    parameters:parameters
+                                    error:&serializationError];
     if (serializationError) {
         NSLog(@"Request failed with serialization error: %@", serializationError);
         return nil;
@@ -90,7 +104,9 @@ NSString* const APIServiceStatusChangeNotification = @"APIServiceStatusChangeNot
     
     __block NSURLSessionDataTask *dataTask = nil;
     dataTask = [self dataTaskWithRequest:request
-                       completionHandler:^(NSURLResponse * __unused response, id responseObject, NSError *error)
+                       completionHandler:^(NSURLResponse * __unused response,
+                                           id responseObject,
+                                           NSError *error)
     {
         if (error)
         {

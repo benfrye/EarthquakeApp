@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 benhamine. All rights reserved.
 //
 
-#import "ViewController.h"
+#import "EarthquakeTableViewController.h"
 #import "MapViewController.h"
 #import "SearchEarthquakeParameters.h"
 #import "Epicenter.h"
@@ -14,23 +14,34 @@
 #import "WTAReusableIdentifier.h"
 
 #import "NSObject+Injectable.h"
-#import "APIService+Search.h"
+#import "APIService+WTAData.h"
 
 #import <NSManagedObject+WTAData.h>
 #import <UIView+WTAAutoLayoutHelpers.h>
 #import <UIView+WTANibLoading.h>
 
-@interface ViewController ()
+static NSDateFormatter *dateFormatter;
 
-@end
-
-@implementation ViewController
+@implementation EarthquakeTableViewController
 {
     int _minimumMagnitude;
     NSFetchedResultsController *_earthquakeResultsController;
-    NSDateFormatter *_dateFormatter;
     UITapGestureRecognizer *_magnitudeTap;
     UITapGestureRecognizer *_timeTap;
+}
+
++(void)initialize
+{
+    dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"MM/dd HH:mm:ss"];
+}
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    if ([[[self fetchedResultsController] fetchedObjects] count] == 0)
+    {
+        [self updateEarthquakes];
+    }
 }
 
 - (void)viewDidLoad
@@ -38,17 +49,17 @@
     [super viewDidLoad];
     
     self.refreshControl = [[UIRefreshControl alloc] init];
-    [self.refreshControl addTarget:self action:@selector(getEarthquakes) forControlEvents:UIControlEventValueChanged];
+    [self.refreshControl addTarget:self
+                            action:@selector(updateEarthquakes)
+                  forControlEvents:UIControlEventValueChanged];
     
     [self setFilterView:[FilterModalView wta_loadInstanceFromNib]];
     [self setTableHeaderView:[TableHeaderView wta_loadInstanceFromNib]];
-    _magnitudeTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(headerTap:)];
+    _magnitudeTap = [[UITapGestureRecognizer alloc] initWithTarget:self
+                                                            action:@selector(headerTap:)];
     [self.tableHeaderView.magnitudeLabel addGestureRecognizer:_magnitudeTap];
     _timeTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(headerTap:)];
     [self.tableHeaderView.timeLabel addGestureRecognizer:_timeTap];
-    
-    _dateFormatter = [[NSDateFormatter alloc] init];
-    [_dateFormatter setDateFormat:@"MM/dd HH:mm:ss"];
 }
 
 - (void)didReceiveMemoryWarning
@@ -64,53 +75,31 @@
     if (!_earthquakeResultsController) {
         NSFetchRequest *fetchRequest = [Epicenter fetchRequest];
         fetchRequest.sortDescriptors = @[];
-        _earthquakeResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest
-                                                                           managedObjectContext:[[WTAData injected] mainContext]
-                                                                             sectionNameKeyPath:nil
-                                                                                      cacheName:nil];
+        _earthquakeResultsController = [[NSFetchedResultsController alloc]
+                                        initWithFetchRequest:fetchRequest
+                                        managedObjectContext:[[WTAData injected] mainContext]
+                                        sectionNameKeyPath:nil
+                                        cacheName:nil];
         [_earthquakeResultsController performFetch:nil];
     }
     return _earthquakeResultsController;
 }
 
--(void)getEarthquakes
+-(void)updateEarthquakes
 {
     SearchEarthquakeParameters *defaultParameters = [SearchEarthquakeParameters initWithDefaults];
-    [self getEarthquakes:defaultParameters];
-}
-
--(void)getEarthquakes:(SearchEarthquakeParameters*) parameters
-{
-    WTAData *dataService = [WTAData injected];
-    
-    [[APIService injected] searchEarthquakes:parameters
-                                  completion:^(NSError *error, SearchEarthquakeResults *result)
-    {
-        if (!error) {
-            [dataService deleteAllDataWithCompletion:^(NSError *error)
-             {
-                 if (error)
-                 {
-                     NSLog(@"Error clearing context for new save: %@", error);
-                 }
-                 else
-                 {
-                     [dataService saveInBackgroundAndWait:^(NSManagedObjectContext *context)
-                      {
-                          for (EarthquakeFeatures *feature in result.features)
-                          {
-                              [Epicenter fromAPIResults:feature inContext:context];
-                          }
-                      } error:&error];
-                     
-                     [self.refreshControl endRefreshing];
-                     [self.tableView reloadData];
-                 }
-             }];
-
+    [[APIService injected] updateEarthquakes:defaultParameters completion:^(NSError *error){
+        if (error)
+        {
+            NSLog(@"Finished receiving results but with error: %@", error);
         }
+        [_earthquakeResultsController performFetch:nil];
+        [self.tableView reloadData];
+        [self.refreshControl endRefreshing];
     }];
 }
+
+#pragma mark - Table view layout
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
@@ -129,12 +118,20 @@
     //Magnitude label clicked
     if ([(UIGestureRecognizer*)sender isEqual:_magnitudeTap])
     {
-        [[[self fetchedResultsController] fetchRequest] setSortDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"magnitude" ascending:YES]]];
+        [[[self fetchedResultsController] fetchRequest]
+         setSortDescriptors:@[
+                              [NSSortDescriptor sortDescriptorWithKey:@"magnitude"
+                                                            ascending:YES]
+                              ]];
     }
     //Time label clicked
     else if ([(UIGestureRecognizer*)sender isEqual:_timeTap])
     {
-        [[[self fetchedResultsController] fetchRequest] setSortDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"time" ascending:YES]]];
+        [[[self fetchedResultsController] fetchRequest]
+         setSortDescriptors:@[
+                              [NSSortDescriptor sortDescriptorWithKey:@"time"
+                                                            ascending:YES]
+                              ]];
     }
     [[self fetchedResultsController] performFetch:nil];
     [self.tableView reloadData];
@@ -148,15 +145,17 @@
  - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSString* cellIdentifier = [EpicenterCell wta_reuseableIdentifier];
-    EpicenterCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier forIndexPath:indexPath];
+    EpicenterCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier
+                                                          forIndexPath:indexPath];
 
     Epicenter *toAdd = [[self fetchedResultsController] objectAtIndexPath:indexPath];
     cell.magnitudeLabel.text = [NSString stringWithFormat:@"%d", [toAdd.magnitude intValue]];
-    cell.latitudeLongitudeLabel.text = [NSString stringWithFormat:@"%.2f/%.2f", [toAdd.latitude floatValue], [toAdd.longitude floatValue]];
-    
-    //convert from milliseconds to seconds
-    NSDate* time = [[NSDate alloc] initWithTimeIntervalSince1970:[toAdd.time doubleValue]/1000];
-    cell.timeLabel.text = [NSString stringWithFormat:@"%@", [_dateFormatter stringFromDate:time]];
+    cell.latitudeLongitudeLabel.text = [NSString stringWithFormat:@"%.2f/%.2f",
+                                        [toAdd.latitude floatValue],
+                                        [toAdd.longitude floatValue]];
+
+    NSDate* time = [[NSDate alloc] initWithTimeIntervalSince1970:(long)toAdd.time];
+    cell.timeLabel.text = [NSString stringWithFormat:@"%@", [dateFormatter stringFromDate:time]];
     
      return cell;
  }
@@ -169,7 +168,9 @@
     touchBlocker.backgroundColor = [UIColor blackColor];
     touchBlocker.alpha = 0.0;
     touchBlocker.userInteractionEnabled = YES;
-    UITapGestureRecognizer *cancelFilterTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(popFilterView)];
+    UITapGestureRecognizer *cancelFilterTap = [[UITapGestureRecognizer alloc]
+                                               initWithTarget:self
+                                               action:@selector(popFilterView)];
     [touchBlocker addGestureRecognizer:cancelFilterTap];
     [self.navigationController.view addSubview:touchBlocker];
 
@@ -211,7 +212,8 @@
     _minimumMagnitude = minimumMagnitude;
 
     NSError *error;
-    NSPredicate *magnitudePredicate = [NSPredicate predicateWithFormat:@"magnitude >= %d", minimumMagnitude];
+    NSPredicate *magnitudePredicate = [NSPredicate predicateWithFormat:@"magnitude >= %d",
+                                       minimumMagnitude];
     
     [[[self fetchedResultsController] fetchRequest] setPredicate:magnitudePredicate];
     [[self fetchedResultsController] performFetch:&error];
@@ -228,7 +230,10 @@
     NSArray *allEpicenters;
     if ([[segue identifier] isEqualToString:@"showSingle"])
     {
-        allEpicenters = [[NSArray alloc] initWithObjects:[[[self fetchedResultsController] fetchedObjects] objectAtIndex:[[self.tableView indexPathForSelectedRow] row]], nil];
+        allEpicenters = [[NSArray alloc]
+                         initWithObjects:[[[self fetchedResultsController] fetchedObjects]
+                                          objectAtIndex:[[self.tableView indexPathForSelectedRow]
+                                                         row]], nil];
     }
     else if ([[segue identifier] isEqualToString:@"showAll"])
     {

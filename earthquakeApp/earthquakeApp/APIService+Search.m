@@ -23,7 +23,8 @@
                 }
                 else
                 {
-                    SearchEarthquakeResults* result = [[SearchEarthquakeResults alloc] initWithDictionary:jsonResult error:&error];
+                    SearchEarthquakeResults* result = [[SearchEarthquakeResults alloc]
+                                                       initWithDictionary:jsonResult error:&error];
                     if (error)
                     {
                         NSLog(@"Err: %@", error);

@@ -31,13 +31,17 @@
             epicenterCoord.latitude = [epicenter.latitude floatValue];
             epicenterCoord.longitude = [epicenter.longitude floatValue];
             
-            MKCircle *radius = [MKCircle circleWithCenterCoordinate:epicenterCoord radius: [epicenter.magnitude intValue] * CIRCLE_RADIUS_MULTIPLIER];
+            MKCircle *radius = [MKCircle
+                                circleWithCenterCoordinate:epicenterCoord
+                                radius:[epicenter.magnitude intValue] * CIRCLE_RADIUS_MULTIPLIER];
             radius.magnitude = epicenter.magnitude;
             [self.earthquakeMapView addOverlay:radius];
         }
         
         if ([self.allEpicenters count] == 1) {
-            MKCoordinateRegion newRegion = MKCoordinateRegionMakeWithDistance(epicenterCoord, 2000000, 2000000);
+            MKCoordinateRegion newRegion = MKCoordinateRegionMakeWithDistance(epicenterCoord,
+                                                                              2000000,
+                                                                              2000000);
             [self.earthquakeMapView setRegion:newRegion];
         }
     }

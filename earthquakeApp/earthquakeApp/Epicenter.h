@@ -2,7 +2,7 @@
 //  Epicenter.h
 //  earthquakeApp
 //
-//  Created by Ben Frye on 4/21/15.
+//  Created by Ben Frye on 4/28/15.
 //  Copyright (c) 2015 benhamine. All rights reserved.
 //
 
@@ -13,12 +13,12 @@
 
 @interface Epicenter : NSManagedObject
 
-@property (nonatomic, retain) NSString * alert;
-@property (nonatomic, retain) NSNumber * depth;
-@property (nonatomic, retain) NSNumber * latitude;
-@property (nonatomic, retain) NSNumber * longitude;
-@property (nonatomic, retain) NSNumber * magnitude;
-@property (nonatomic, retain) NSNumber * time;
+@property (nonatomic, strong) NSString * alert;
+@property (nonatomic, strong) NSNumber * depth;
+@property (nonatomic, strong) NSNumber * latitude;
+@property (nonatomic, strong) NSNumber * longitude;
+@property (nonatomic, strong) NSNumber * magnitude;
+@property (nonatomic) int64_t time;
 
 +(Epicenter*)fromAPIResults:(EarthquakeFeatures*)feature inContext:(NSManagedObjectContext*)context;
 

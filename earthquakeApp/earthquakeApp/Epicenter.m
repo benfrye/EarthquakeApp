@@ -2,7 +2,7 @@
 //  Epicenter.m
 //  earthquakeApp
 //
-//  Created by Ben Frye on 4/21/15.
+//  Created by Ben Frye on 4/28/15.
 //  Copyright (c) 2015 benhamine. All rights reserved.
 //
 
@@ -27,10 +27,10 @@
     epicenter.depth = [feature.geometry.coordinates objectAtIndex:2];
     
     epicenter.magnitude = feature.properties.mag;
-    epicenter.time = feature.properties.time;
+    //convert from milliseconds to seconds
+    epicenter.time = ([feature.properties.time integerValue]/1000);
     epicenter.alert = feature.properties.alert;
     return epicenter;
 }
-
 
 @end

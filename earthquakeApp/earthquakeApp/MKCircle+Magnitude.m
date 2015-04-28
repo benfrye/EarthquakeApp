@@ -14,7 +14,10 @@
 
 -(void)setMagnitude:(NSNumber *)newMagnitude
 {
-    objc_setAssociatedObject(self, @selector(magnitude), newMagnitude, OBJC_ASSOCIATION_COPY_NONATOMIC);
+    objc_setAssociatedObject(self,
+                             @selector(magnitude),
+                             newMagnitude,
+                             OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
 
 -(NSNumber*)magnitude

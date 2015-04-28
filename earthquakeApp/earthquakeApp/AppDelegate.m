@@ -24,16 +24,19 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
     //Configure WTAData
-    WTADataConfiguration* config = [WTADataConfiguration defaultConfigurationWithModelNamed:@"earthquakeApp"];
+    WTADataConfiguration* config = [WTADataConfiguration
+                                    defaultConfigurationWithModelNamed:@"earthquakeApp"];
     config.shouldDeleteStoreFileOnModelMismatch = YES;
     config.shouldDeleteStoreFileOnIntegrityErrors = YES;
     WTAData* dataStore = [[WTAData alloc] initWithConfiguration:config];
     [[JInjector defaultInjector] setObject:dataStore forClass:[WTAData class]];
     
     //Configure API Client
-    APIService* apiService = [[APIService alloc] initWithBaseURL:[NSURL URLWithString:@"http://earthquake.usgs.gov"]
-                                                          prefix:@"/fdsnws/event/1"
-                                            sessionConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
+    APIService* apiService = [[APIService alloc]
+                              initWithBaseURL:[NSURL URLWithString:@"http://earthquake.usgs.gov"]
+                              prefix:@"/fdsnws/event/1"
+                              sessionConfiguration:[NSURLSessionConfiguration
+                                                    defaultSessionConfiguration]];
     [[JInjector defaultInjector] setObject:apiService forClass:[APIService class]];
     
     return YES;
